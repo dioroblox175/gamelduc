@@ -4,7 +4,7 @@ const enemy = document.getElementById('enemy');
 
 // Các biến lưu trữ thông tin di chuyển
 let playerSpeed = 5;
-let enemySpeed = 2;
+let enemySpeed = 1;
 let gameWidth = 600;
 let gameHeight = 400;
 
@@ -23,15 +23,28 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
-// Di chuyển enemy xuống dưới và quay lại
+// Hàm tính khoảng cách giữa player và enemy
+function distance(playerRect, enemyRect) {
+    const dx = playerRect.left - enemyRect.left;
+    const dy = playerRect.top - enemyRect.top;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+// Di chuyển enemy đến gần player
 function moveEnemy() {
+    const playerRect = player.getBoundingClientRect();
     const enemyRect = enemy.getBoundingClientRect();
     
-    if (enemyRect.top < gameHeight) {
-        enemy.style.top = enemyRect.top + enemySpeed + 'px';
-    } else {
-        enemy.style.top = '10px';
-    }
+    const dx = playerRect.left - enemyRect.left;
+    const dy = playerRect.top - enemyRect.top;
+
+    const angle = Math.atan2(dy, dx);
+
+    const moveX = Math.cos(angle) * enemySpeed;
+    const moveY = Math.sin(angle) * enemySpeed;
+
+    enemy.style.left = enemyRect.left + moveX + 'px';
+    enemy.style.top = enemyRect.top + moveY + 'px';
 }
 
 // Kiểm tra va chạm giữa player và enemy
